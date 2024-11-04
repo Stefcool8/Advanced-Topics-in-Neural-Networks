@@ -37,7 +37,7 @@ wandb.login()
 sweep_config = load_sweep_config()
 
 config = load_config('/kaggle/input/config/config.yaml')
-# config = load_config('config.yaml')
+# config = load_config('/config/config.yaml')
 
 sweep_id = wandb.sweep(sweep=sweep_config, project="Assignment3")
 

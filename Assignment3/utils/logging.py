@@ -7,15 +7,11 @@ class TensorBoardLogger:
         self.writer = SummaryWriter(log_dir=log_dir)
 
     def log_epoch_metrics(self, epoch, model, train_loader, test_loader):
-        device = next(model.parameters()).device  # Get the device of the model
+        device = next(model.parameters()).device
 
-        # Evaluate training loss
         train_loss = self.evaluate_loss(model, train_loader, device)
-
-        # Evaluate test loss
         test_loss = self.evaluate_loss(model, test_loader, device)
 
-        # Log the losses
         self.writer.add_scalar("Loss/train", train_loss, epoch)
         self.writer.add_scalar("Loss/test", test_loss, epoch)
 
@@ -25,7 +21,7 @@ class TensorBoardLogger:
         total_loss = 0.0
         with torch.no_grad():
             for data, target in data_loader:
-                data, target = data.to(device), target.to(device)  # Transfer to GPU
+                data, target = data.to(device), target.to(device)
                 output = model(data)
                 total_loss += torch.nn.functional.cross_entropy(output, target).item()
         return total_loss / len(data_loader)

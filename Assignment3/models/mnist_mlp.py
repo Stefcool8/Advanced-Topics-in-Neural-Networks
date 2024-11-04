@@ -10,7 +10,7 @@ class MLP(nn.Module):
         self.fc3 = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
-        x = x.view(x.size(0), -1)  # flatten the input
+        x = x.view(x.size(0), -1)
         x = torch.relu(self.fc1(x))
         x = torch.relu(self.fc2(x))
         x = self.fc3(x)

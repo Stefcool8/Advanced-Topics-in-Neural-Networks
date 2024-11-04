@@ -1,5 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
+from torchvision.transforms import v2
+
 from dataset_config.dataset_factory import DatasetFactory
 from models.model_factory import ModelFactory
 from utils.logging import get_logger
@@ -11,7 +13,6 @@ import wandb
 
 class Trainer:
     def __init__(self, config, sweep_config=None):
-        # Load config and set up device, model, optimizer, etc.
         self.config = config
         self.device = config["training"]["device"]
         if not torch.cuda.is_available() and self.device == "cuda":
@@ -19,7 +20,6 @@ class Trainer:
             print("CUDA not available, switching to CPU")
         self.device = torch.device(self.device)
 
-        # Load model based on sweep or config
         if sweep_config:
             self.model = ModelFactory.get_model(sweep_config.model, 100).to(self.device)
             if sweep_config.optimizer == "adam":
@@ -37,7 +37,6 @@ class Trainer:
                                                                                             **config["training"][
                                                                                                 "scheduler_args"])
 
-        # Load dataset with augmentations from sweep or config
         train_dataset = DatasetFactory.get_dataset(config, train=True,
                                                    dataset_transforms=sweep_config.transforms if sweep_config else
                                                    config["dataset"]["transforms"])
@@ -52,7 +51,6 @@ class Trainer:
         self.enable_half = self.device == 'cuda'
         self.scaler = GradScaler(self.device, enabled=self.enable_half)
 
-        # Early stopping setup
         self.early_stopping = EarlyStopping(patience=config["training"]["early_stopping"]["patience"],
                                             min_delta=config["training"]["early_stopping"]["min_delta"]) \
             if config["training"]["early_stopping"].get("enabled", False) else None
@@ -135,10 +133,8 @@ class Trainer:
                 wandb.log({"train_accuracy": train_acc, "epoch": epoch})
                 wandb.log({"validation_accuracy": val_acc, "epoch": epoch})
 
-                # Log epoch metrics
                 self.logger.log_epoch_metrics(epoch, self.model, self.train_loader, self.val_loader)
 
-                # Check early stopping
                 if self.early_stopping:
                     self.early_stopping(val_acc)
                     if self.early_stopping.early_stop:

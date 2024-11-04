@@ -10,21 +10,14 @@ from dataset_config.cached_dataset import CachedDataset
 class DatasetFactory:
     @staticmethod
     def get_dataset(config, train=True, dataset_transforms=None):
-        """
-        Fetches and returns a dataset based on the given configuration, applying each transform separately
-        and concatenating the results with the original dataset.
-        """
-        # Retrieve the dataset name and class path from config
         if dataset_transforms is None:
             dataset_transforms = []
         dataset_name = config["dataset"]["name"]
         dataset_path = config["dataset"]["path"]
 
-        # Check for standard torchvision dataset
         if dataset_name.lower() in ["mnist", "cifar10", "cifar100"]:
             return DatasetFactory.get_standard_dataset(dataset_name, dataset_path, train, dataset_transforms)
 
-        # Import custom dataset class dynamically
         dataset_class = DatasetFactory.load_class(config["dataset"]["class"])
         return dataset_class(train=train)
 
@@ -43,18 +36,13 @@ class DatasetFactory:
         else:
             raise ValueError(f"Unsupported dataset: {name}")
 
-        # Create a list to store datasets with different transformations
         transformed_datasets = []
 
-        # Add the original dataset without transformations
         original_data = [(transforms.ToTensor()(Image.fromarray(img)), label) for img, label in zip(base_dataset.data, base_dataset.targets)]
         transformed_datasets.append(CachedDataset(original_data))
 
-        # Apply each transform in the list separately to create duplicated datasets
         for transform_name in dataset_transforms:
-            # Get the transform pipeline
             aug_transform = DatasetFactory.get_transform_pipeline(transform_name)
-            # Apply transformation to a new dataset copy
             transformed_data = [(aug_transform(Image.fromarray(img)), label) for img, label in zip(base_dataset.data, base_dataset.targets)]
             transformed_datasets.append(CachedDataset(transformed_data))
 
@@ -73,7 +61,6 @@ class DatasetFactory:
             transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
         ]
 
-        # Define available augmentations
         augmentation_transforms = {
             'RandomHorizontalFlip': transforms.Compose([transforms.RandomHorizontalFlip(p=0.5), *common_transforms]),
             'RandomCrop': transforms.Compose([transforms.RandomResizedCrop(size=(32, 32), scale=(0.8, 1.0)), *common_transforms]),

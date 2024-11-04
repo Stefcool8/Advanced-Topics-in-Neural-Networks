@@ -9,15 +9,12 @@ class CachedDataset(Dataset):
         self.use_cache = use_cache
         os.makedirs(self.cache_dir, exist_ok=True)
 
-        # Initialize cache state
         self.cache = [None] * len(self.dataset)
 
     def __getitem__(self, index):
-        # Check cache
         if self.use_cache and self.cache[index] is not None:
             return self.cache[index]
 
-        # Load data and optionally cache it
         data, target = self.dataset[index]
         if self.use_cache:
             self.cache[index] = (data.clone(), target)

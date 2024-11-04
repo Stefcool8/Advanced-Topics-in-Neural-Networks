@@ -12,8 +12,6 @@ class CustomDataset(Dataset):
 
     @staticmethod
     def load_data():
-        # Load data from root directory or files
-        # This is a placeholder; actual data loading logic would go here.
         data = [("sample_image_path.jpg", 0) for _ in range(100)]
         return data
 
