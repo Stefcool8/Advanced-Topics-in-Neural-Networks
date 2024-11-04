@@ -3,6 +3,7 @@
 ---
 
 Kaggle Notebook: https://www.kaggle.com/code/stefcool8/assignment-3
+
 WandB Metrics: https://wandb.ai/stefcool8-universitatea-alexandru-ioan-cuza-din-ia-i/Assignment3?nw=nwuserstefcool8
 
 ---
