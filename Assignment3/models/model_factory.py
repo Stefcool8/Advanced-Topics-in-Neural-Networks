@@ -1,5 +1,5 @@
 import timm
-from models import PreActResNet18, MLP, LeNet, CIFAR100ResMLP
+from models import PreActResNet18, MLP, LeNet
 
 
 class ModelFactory:
@@ -13,8 +13,6 @@ class ModelFactory:
             return timm.create_model("resnet18", pretrained=False, num_classes=num_classes)
         elif model_name == "preact_resnet18":
             return PreActResNet18(num_classes=num_classes)
-        elif model_name == "resmlp":
-            return CIFAR100ResMLP()
         elif model_name in timm.list_models():
             return timm.create_model(model_name, pretrained=False, num_classes=num_classes)
         else:
