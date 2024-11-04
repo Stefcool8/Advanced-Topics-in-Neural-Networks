@@ -2,6 +2,11 @@
 
 ---
 
+Kaggle Notebook: https://www.kaggle.com/code/stefcool8/assignment-3
+WandB Metrics: https://wandb.ai/stefcool8-universitatea-alexandru-ioan-cuza-din-ia-i/Assignment3?nw=nwuserstefcool8
+
+---
+
 ## Points Summary
 Based on the criteria and optimizations implemented, I expect to receive **17-18 points** for the model training and evaluation setup, achieving an efficient pipeline with clear augmentation and early-stopping strategies. I anticipate partial points for performance metrics, as some configurations demonstrate promising results but may not meet the minimum required validation accuracy (78%).
 
@@ -44,7 +49,7 @@ The following metrics were tracked using Weights & Biases:
 The training pipeline is optimized in the following ways:
 1. **Use of Augmented and Concatenated Datasets**: Instead of relying solely on a single set of augmentations, transformations were applied separately, and their results were concatenated with the original dataset. This ensures a richer, more varied dataset that encourages the model to generalize better, particularly when learning diverse features. It's also more efficient to load them at the start, and not during training.
 
-2. **Dataset Loading**: By loading the datasets in memory only once (from `datasets.CIFAR100` for example) and caching them, the pipeline minimizes redundant I/O operations, enhancing training speed. This is especially beneficial when training on large datasets, as it reduces the time spent loading data.
+2. **Dataset Loading**: By loading the datasets in memory only once (from `datasets.CIFAR100` for example) and caching them, the pipeline minimizes redundant I/O operations, enhancing training speed. This is especially beneficial when training on large datasets, as it reduces the time spent loading data. It's possible to load custom datasets as well.
 
 3. **Precision Scaling**: Mixed-precision training using `GradScaler` enables the model to leverage GPU power efficiently while minimizing memory overhead, especially during gradient calculation.
 
