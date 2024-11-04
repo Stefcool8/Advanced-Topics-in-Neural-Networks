@@ -1,0 +1,43 @@
+dataset:
+  name: cifar100
+  path: ./data
+  class: None
+  cache: true
+  batch_size: 256
+  num_workers: 4
+  transforms:
+    - ColorJitter
+    - RandomCrop
+  pin_memory: true
+
+model:
+  name: preact_resnet18
+  num_classes: 100
+
+training:
+  device: cuda
+  epochs: 100
+  optimizer: SGD
+  optimizer_args:
+    lr: 0.1
+    momentum: 0.9
+    weight_decay: 0.001
+    nesterov: True
+    fused: True
+  scheduler: ReduceLROnPlateau
+  scheduler_args:
+    factor: 0.1
+    patience: 5
+    min_lr: 0.0001
+#  scheduler: StepLR
+#  scheduler_args:
+#      step_size: 10
+#      gamma: 0.1
+  early_stopping:
+    enabled: True
+    patience: 10
+    min_delta: 0.001
+
+logging:
+  tensorboard: true
+  wandb: true
